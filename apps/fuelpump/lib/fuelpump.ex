@@ -1,6 +1,6 @@
-defmodule Lube do
+defmodule Fuelpump do
   @moduledoc """
-  Documentation for Lube.
+  Documentation for Fuelpump.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Lube do
 
   ## Examples
 
-      iex> Lube.hello
+      iex> Fuelpump.hello
       :world
 
   """
