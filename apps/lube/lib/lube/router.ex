@@ -18,7 +18,7 @@ defmodule Lube.Router do
   get "/" do
     conn
     |> put_resp_header("location", Application.get_env(:lube, :homepage))
-    |> send_resp(303, "SEE OTHER")
+    |> send_resp(303, "See Other")
   end
 
   # 404 Not Found

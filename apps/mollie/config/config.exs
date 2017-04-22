@@ -22,9 +22,7 @@ use Mix.Config
 #
 
 config :mollie, [
-  base_url: "https://api.mollie.nl/v1",
-  redirect_url: "https://cromido-lube.herokuapp.com/payments/redirect",
-  webhook_url: "https://cromido-lube.herokuapp.com/payments/webhook"
+  base_url: "https://api.mollie.nl/v1"
 ]
 
 # It is also possible to import configuration files, relative to this
