@@ -19,8 +19,8 @@ defmodule Lube.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:cowboy, :logger, :plug],
-     mod: {Lube.Application, []}]
+    [extra_applications: [:cowboy, :logger, :plug, :stash],
+     mod: {Lube, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -36,6 +36,7 @@ defmodule Lube.Mixfile do
     {:cowboy, "~> 1.1.2"},
     {:plug, "~> 1.3.4"},
     {:poison, "~> 3.1.0"},
-    {:mollie, in_umbrella: true}
+    {:mollie, in_umbrella: true},
+    {:stash, git: "https://github.com/outofboundstech/stash.git"}
   ]
 end
