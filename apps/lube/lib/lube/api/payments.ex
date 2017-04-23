@@ -3,15 +3,19 @@ defmodule Lube.API.Payments do
 
   import Poison, only: [encode!: 1]
 
+  alias Lube.Storage
+
   alias Mollie
   alias Mollie.Payment
+  alias Mollie.Transaction
 
   def create(conn) do
     re=%Payment{amount: 10.00, description: "CroMiDo lube Mollie test payment"}
     |> Mollie.post
 
     case re do
-      {:ok, _body=%{"links" => %{"paymentUrl" => url}}} ->
+      {:ok, t=%Transaction{links: %{"paymentUrl" => url}}} ->
+        Storage.write!(t)
         # Perhaps prepare EEX JSON responses?
         response = %{
           "messages" => [
@@ -51,12 +55,12 @@ defmodule Lube.API.Payments do
     end
   end
 
-  def split(conn) do
+  def webhook(conn) do
     conn
     |> send_resp(200, "OK")
   end
 
-  def finish(conn) do
+  def redirect(conn) do
     conn
     |> send_resp(200, "OK")
   end

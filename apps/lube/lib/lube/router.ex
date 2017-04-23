@@ -11,8 +11,8 @@ defmodule Lube.Router do
   # Payment initialisation, referral, webhook, redirect
   import Lube.API.Payments, only: [create: 1, split: 1, finish: 1]
   get "/payments/create", do: create(conn)
-  post "/payments/webhook", do: split(conn)
-  get "/payments/redirect", do: finish(conn)
+  post "/payments/webhook", do: webhook(conn)
+  get "/payments/redirect", do: redirect(conn)
 
   # Home
   get "/" do
