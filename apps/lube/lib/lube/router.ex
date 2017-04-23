@@ -9,7 +9,7 @@ defmodule Lube.Router do
   # plug Plug.Logger, log: :debug
 
   # Payment initialisation, referral, webhook, redirect
-  import Lube.API.Payments, only: [create: 1, split: 1, finish: 1]
+  import Lube.API.Payments, only: [create: 1, webhook: 1, redirect: 1]
   get "/payments/create", do: create(conn)
   post "/payments/webhook", do: webhook(conn)
   get "/payments/redirect", do: redirect(conn)
