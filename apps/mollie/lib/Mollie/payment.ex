@@ -1,74 +1,46 @@
 defmodule Mollie.Payment do
 
-  # The API specification for payment request objects can be found at
-  # https://www.mollie.com/nl/docs/reference/payments/create
-  #
-  # Only :amount and :description are non-optional
+  @base_url   Application.get_env(:mollie, :base_url)
+  @api_key    Application.get_env(:mollie, :api_key)
 
-  @redirectUrl  Application.get_env(:mollie, :redirect_url)
-  @webhookUrl   Application.get_env(:mollie, :webhook_url)
+  # Headers as follows:
+  #   -H "Authorization: Bearer test_dHar4XY7LxsDOtmnkVtjNVWXLSlXsM"
+  @headers    [{"Authorization", "Bearer " <> @api_key} ]
 
-  @derive [Poison.Encoder]
-  defstruct [
-    # Decimal - The amount in EURO that you want to charge, e.g. `100.00` if you
-    #  would want to charge €100.00.
-    :amount,
+  alias HTTPoison, as: Http
+  import Poison, only: [encode!: 1, decode!: 1, decode!: 2]
 
-    # String - The description of the payment you're creating. This will be
-    #   shown to the consumer on their card or bank statement when possible, and
-    #   in any exports you generate. We recommend you use the order number so
-    #   that you can always link the payment to the order. This is particulary
-    #   useful for bookkeeping.
-    :description,
+  alias Mollie.Payment.Request
+  alias Mollie.Payment.Transaction
 
-    # String - The URL the consumer will be redirected to after the payment
-    #   process. It could make sense for the redirectURL to contain a unique
-    #   identifier – like your order ID – so you can show the right page
-    #   referencing the order when the consumer returns.
-    redirectUrl: @redirectUrl,                                                  # Take default from config
+  def create(req=%Request{}) do
+    case Http.post(@base_url <> "/payments", encode!(req), @headers) do
+      {:ok, %Http.Response{status_code: 201, body: body}} ->                    # HTTP 201 CREATED
+        {:ok, decode!(body, as: %Transaction{})}
 
-    # String - The URL the consumer will be redirected to after the payment
-    #   process. It could make sense for the redirectURL to contain a unique
-    #   identifier – like your order ID – so you can show the right page
-    #   referencing the order when the consumer returns.
-    webhookUrl: @webhookUrl,                                                    # Take default from config
+      {:ok, %Http.Response{status_code: 422, body: body}} ->                    # HTTP 422 UNPROCESSABLE ENTITY
+        {:error, decode! body}
 
-    # String - Optional – Normally, a payment method selection screen is shown.
-    #   However, when using this parameter, your customer will skip the
-    #   selection screen and will be sent directly to the chosen payment method.
-    #   The parameter enables you to fully integrate the payment method
-    #   selection into your website, however note Mollie's country based
-    #   conversion optimization is lost.
-    # Possible values: `creditcard`, `sofort`, `ideal`, `mistercash`,
-    #   `banktransfer`, `directdebit`, `paypal`, `bitcoin`, `podiumcadeaukaart`,
-    #    `paysafecard`, `kbc`, `belfius`
-    method: nil,
+      {:error, %Http.Error{reason: reason}} ->
+        {:error, reason}
+    end
+  end
 
-    # Object - Optional – Provide any data you like in JSON notation, and we
-    #   will save the data alongside the payment. Whenever you fetch the payment
-    #   with our API, we'll also include the metadata. You can use up to 1kB of
-    #   JSON.
-    metadata: nil,
+  def get(_t=%Transaction{id: id}) do
+    case Http.get(@base_url <> "/payments" <> "/#{id}", @headers, params: %{testmode: true}) do
+      {:ok, %Http.Response{status_code: 200, body: body}} ->                    # HTTP 200 OK
+        {:ok, decode!(body, as: %Transaction{})}
 
-    # String - Optional – Allow you to preset the language to be used in the
-    #   payment screens shown to the consumer. When this parameter is not
-    #   provided, the browser language will be used instead (which is usually
-    #   more accurate). You can provide any ISO 15897 locale, but our payment
-    #   screens currently only support the following languages:
-    # Possible values: `en_US`, `de_DE`, `fr_FR`, `fr_BE`, `nl_NL`, `nl_BE`
-    locale: nil,
+      {:ok, %Http.Response{status_code: 404, body: body}} ->                    # HTTP 404 NOT FOUND
+        {:error, decode! body}
 
-    # String - Optional
-    recurringType: nil,
+      {:error, %Http.Error{reason: reason}} ->
+        {:error, reason}
+    end
+  end
 
-    # String - Optional – The ID of the customer for whom the payment is being
-    #   created.
-    customerId: nil,
-
-    # String - Optional – When creating recurring payments, a specific mandate
-    #   ID may be supplied to indicate which of the consumer's accounts should
-    #   be credited.
-    mandateId: nil
-  ]
+  def get(_t=%Transaction{id: id}, f) do
+    # Apply response to f
+  end
 
 end

@@ -1,17 +1,18 @@
 defmodule Lube.API.Payments do
+
   import Plug.Conn
 
   import Poison, only: [encode!: 1]
 
   alias Lube.Storage
 
-  alias Mollie
   alias Mollie.Payment
-  alias Mollie.Transaction
+  alias Mollie.Payment.Request
+  alias Mollie.Payment.Transaction
 
   def create(conn) do
-    re=%Payment{amount: 10.00, description: "CroMiDo lube Mollie test payment"}
-    |> Mollie.post
+    re=%Request{amount: 10.00, description: "CroMiDo lube Mollie test payment"}
+    |> Payment.create
 
     case re do
       {:ok, t=%Transaction{links: %{"paymentUrl" => url}}} ->
@@ -55,12 +56,26 @@ defmodule Lube.API.Payments do
     end
   end
 
-  def webhook(conn) do
-    conn
-    |> send_resp(200, "OK")
+  def webhook(conn=%{params: %{"id" => id}}) do
+    case Payment.get(%Transaction{id: id}) do
+      {:ok, t=%Transaction{}} ->
+        Storage.write!(t)
+
+        # Send payment status update to the user (chatbot)
+
+        conn
+        |> send_resp(200, "OK")
+
+      {:error, error} ->
+        IO.inspect error
+        # Return a neat error message
+        conn
+        |> send_resp(500, "INTERNAL SERVER ERROR")
+    end
   end
 
   def redirect(conn) do
+    # Thanks for all the fish; allow to dismiss the screen
     conn
     |> send_resp(200, "OK")
   end

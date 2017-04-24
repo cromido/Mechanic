@@ -1,4 +1,4 @@
-defmodule Mollie.Transaction do
+defmodule Mollie.Payment.Transaction do
 
   # {:ok,
   #  %{"amount" => "10.00", "createdDatetime" => "2017-04-23T07:05:20.0Z",

@@ -3,14 +3,15 @@ defmodule Lube.Router do
 
   plug :match
   plug Plug.Logger
+  plug Plug.Parsers, parsers: [:urlencoded]
   plug :dispatch
 
   # Perhaps restrict to dev environment only
   # plug Plug.Logger, log: :debug
 
-  # Payment initialisation, referral, webhook, redirect
+  # Payment creation, webhook, redirect
   import Lube.API.Payments, only: [create: 1, webhook: 1, redirect: 1]
-  get "/payments/create", do: create(conn)
+  post "/payments/create", do: create(conn)
   post "/payments/webhook", do: webhook(conn)
   get "/payments/redirect", do: redirect(conn)
 

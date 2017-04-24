@@ -1,9 +1,11 @@
 defmodule Lube.Storage do
 
+  require Logger
+
   alias Stash.Registry
   alias Stash.Bucket
 
-  alias Mollie.Transaction
+  alias Mollie.Payment.Transaction
 
   # Read/write Transactions
   def read(%Transaction{id: key}), do: read(:transaction, key)
@@ -17,6 +19,7 @@ defmodule Lube.Storage do
   end
 
   defp write!(table, key, value) do
+    Logger.info "Writing #{table} #{key}."
     Registry.lookup!(table)
     |> Bucket.set(key, value)
   end
