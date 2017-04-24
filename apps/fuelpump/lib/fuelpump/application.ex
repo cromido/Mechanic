@@ -1,4 +1,4 @@
-defmodule Lube.Application do
+defmodule Fuelpump.Application do
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -10,13 +10,13 @@ defmodule Lube.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Starts a worker by calling: Lube.Worker.start_link(arg1, arg2, arg3)
-      # worker(Lube.Worker, [arg1, arg2, arg3]),
+      # Starts a worker by calling: Fuelpump.Worker.start_link(arg1, arg2, arg3)
+      # worker(Fuelpump.Worker, [arg1, arg2, arg3]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Lube.Supervisor]
+    opts = [strategy: :one_for_one, name: Fuelpump.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

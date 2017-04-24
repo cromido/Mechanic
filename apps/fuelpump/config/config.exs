@@ -10,18 +10,16 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :lube, key: :value
+#     config :fuelpump, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:lube, :key)
+#     Application.get_env(:fuelpump, :key)
 #
 # Or configure a 3rd-party app:
 #
 #     config :logger, level: :info
 #
-
-config :lube, template_dir: "lib/templates"
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

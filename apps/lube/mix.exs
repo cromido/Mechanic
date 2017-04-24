@@ -19,7 +19,7 @@ defmodule Lube.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [applications: [:cowboy, :logger, :plug, :httpoison],
+    [extra_applications: [:cowboy, :logger, :plug, :stash],
      mod: {Lube, []}]
   end
 
@@ -36,7 +36,7 @@ defmodule Lube.Mixfile do
     {:cowboy, "~> 1.1.2"},
     {:plug, "~> 1.3.4"},
     {:poison, "~> 3.1.0"},
-    {:httpoison, "~> 0.11.1"},
-    {:mollie, in_umbrella: true}
+    {:mollie, in_umbrella: true},
+    {:stash, git: "https://github.com/outofboundstech/stash.git"}
   ]
 end

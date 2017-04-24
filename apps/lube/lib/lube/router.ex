@@ -3,22 +3,23 @@ defmodule Lube.Router do
 
   plug :match
   plug Plug.Logger
+  plug Plug.Parsers, parsers: [:urlencoded]
   plug :dispatch
 
   # Perhaps restrict to dev environment only
   # plug Plug.Logger, log: :debug
 
-  # Payment initialisation, referral, webhook, redirect
-  import Lube.API.Payments, only: [create: 1, split: 1, finish: 1]
-  get "/payments/create", do: create(conn)
-  post "/payments/webhook", do: split(conn)
-  get "/payments/redirect", do: finish(conn)
+  # Payment creation, webhook, redirect
+  import Lube.API.Payments, only: [create: 1, webhook: 1, redirect: 1]
+  post "/payments/create", do: create(conn)
+  post "/payments/webhook", do: webhook(conn)
+  get "/payments/redirect", do: redirect(conn)
 
   # Home
   get "/" do
     conn
     |> put_resp_header("location", Application.get_env(:lube, :homepage))
-    |> send_resp(303, "SEE OTHER")
+    |> send_resp(303, "See Other")
   end
 
   # 404 Not Found

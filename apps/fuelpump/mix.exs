@@ -1,8 +1,8 @@
-defmodule Mollie.Mixfile do
+defmodule Fuelpump.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :mollie,
+    [app: :fuelpump,
      version: "0.1.0",
      build_path: "../../_build",
      config_path: "../../config/config.exs",
@@ -19,7 +19,8 @@ defmodule Mollie.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger, :httpoison]]
+    [extra_applications: [:logger],
+     mod: {Fuelpump.Application, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -36,9 +37,6 @@ defmodule Mollie.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [
-      {:poison, "~> 3.1.0"},
-      {:httpoison, "~> 0.11.1"}
-    ]
+    []
   end
 end
