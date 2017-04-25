@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Your top-up was successful</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CroMiDo account top-up successful</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-<h1>Thank you</h1>
-<p>You successfully topped up your CroMiDo credit, thank you for your continued
-  support.<p>
-<button onclick="window.close();">Close</button>
+  <div class="container-fluid">
+    <h1>Top-up successful</h1>
+    <p class="lead"><mark>Thank you for your continued support.</mark> The
+      gerbils at CroMiDo are processing your top-up request. As soon as your
+      payment comes through we will top-up your account credit and send you a
+      message on Facebook Messenger.</p>
+    <p>You can safely close this browser window now.</p>
+    <button class="btn btn-lg btn-primary center-block" onclick="window.close();">Close</button>
+    <p><small><em>* If this button doesn't work, use the &cross; in the top right
+      (or left) corner of this browser window.</em></small></p>
+  </div>
 </body>
 </html>
