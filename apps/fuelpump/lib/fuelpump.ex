@@ -1,18 +1,22 @@
 defmodule Fuelpump do
-  @moduledoc """
-  Documentation for Fuelpump.
-  """
+  # See http://elixir-lang.org/docs/stable/elixir/Application.html
+  # for more information on OTP Applications
+  @moduledoc false
 
-  @doc """
-  Hello world.
+  use Application
 
-  ## Examples
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
 
-      iex> Fuelpump.hello
-      :world
+    # Define workers and child supervisors to be supervised
+    children = [
+      # Starts a worker by calling: Fuelpump.Worker.start_link(arg1, arg2, arg3)
+      # worker(Fuelpump.Worker, [arg1, arg2, arg3]),
+    ]
 
-  """
-  def hello do
-    :world
+    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: Fuelpump.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end

@@ -19,6 +19,8 @@ defmodule Lube.API.Payments do
   alias Mollie.Payment.Request
   alias Mollie.Payment.Transaction
 
+  import Fuelpump.Messages
+
   def create(conn) do
     re=%Request{amount: 10.00, description: "CroMiDo lube Mollie test payment"}
     |> Payment.create
@@ -26,36 +28,16 @@ defmodule Lube.API.Payments do
     case re do
       {:ok, t=%Transaction{links: %{"paymentUrl" => url}}} ->
         Storage.write!(t)
-        # Perhaps prepare EEX JSON responses?
-        response = %{
-          "messages" => [
-            %{
-              "attachment" => %{
-                "type" => "template",
-                "payload" => %{
-                  "template_type" => "button",
-                  "text" => "Cool, I've prepared a €10.00 top-up. Ready to go to the check-out?",
-                  "buttons" => [
-                    %{
-                      "type": "web_url",
-                      "url": url,
-                      "title": "Let's go"
-                    },
-                    %{
-                      "type": "show_block",
-                      "block_name": "Cancel",
-                      "title": "Cancel"
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-
+        # Prepare Chatfuel response
+        buttons = buttons("Cool, I've prepared a €10.00 top-up. Ready to go to the check-out?")
+        |> add_web_url_button("Let's go", url)
+        |> add_show_block_button("Cancel", "Cancel")
+        messages = messages()
+        |> add_attachment(buttons)
+        # Respond on conn
         conn
-        |> put_resp_header("location", url)
-        |> send_resp(200, encode! response)
+        |> put_resp_content_type("application/json")
+        |> send_resp(200, encode! messages)
 
       {:error, error} ->
         IO.inspect error
