@@ -4,14 +4,7 @@ defmodule Lube.API.Payments do
 
   import Poison, only: [encode!: 1]
 
-
-  # Prepare templates
-  require EEx
-  @base_dir File.cwd!()
-  @template_dir Application.get_env(:lube, :template_dir)
-  template = Path.join([@base_dir, @template_dir, "complete.html.eex"])
-  EEx.function_from_file :defp, :redirect_template, template, []
-
+  alias Lube.Templates
 
   alias Lube.Storage
 
@@ -69,6 +62,6 @@ defmodule Lube.API.Payments do
     # Thanks for all the fish; allow to dismiss the screen
     conn
     |> put_resp_content_type("text/html")
-    |> send_resp(200, redirect_template())
+    |> send_resp(200, Templates.redirect())
   end
 end
